@@ -1,4 +1,6 @@
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -11,7 +13,9 @@ import java.util.Set;
 public class App {
     public static void main(String[] args) throws Exception {
         try (
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\cfvm0\\OneDrive\\Documents\\Proyecto Dalgo 2 OPT\\Proyecto2DalgoOpti\\bin\\P2.in"));
+            FileWriter writer = new FileWriter("C:\\Users\\cfvm0\\OneDrive\\Documents\\Proyecto Dalgo 2 OPT\\Proyecto2DalgoOpti\\bin\\P2.out")
         ) {
             String line = reader.readLine(); // Número de casos
             if (line == null) {
@@ -19,7 +23,7 @@ public class App {
             }
             int casos = Integer.parseInt(line.trim());
             for (int caso = 1; caso <= casos; caso++) {
-                System.out.println("Caso -> " + caso);
+ //------------System.out.println("Caso -> " + caso);
 
                 line = reader.readLine();
                 if (line == null) {
@@ -73,9 +77,14 @@ public class App {
                     for (Cell other : nearbyCells) {
                         if (cell.getCellId() >= other.getCellId()) continue; // Evitar duplicados
 
-                        double distanciaD = Math.hypot(other.getCellXPos() - cell.getCellXPos(), other.getCellYPos() - cell.getCellYPos());
+                        if (cell.getCellType() == 1 && other.getCellType() == 3) continue; // Salta si son tipo 1 y tipo 3 por que una iniciadora no puede mandar a calculadora.
+                        if (cell.getCellType() == 3 && other.getCellType() == 1) continue; // Salta si son tipo 3 y tipo 1 por que una iniciadora no puede mandar a calculadora.
 
+                        double distanciaD = Math.hypot(other.getCellXPos() - cell.getCellXPos(), other.getCellYPos() - cell.getCellYPos());
+                        
+                        
                         if (distanciaD <= maxDistance && distanciaD != 0) {
+                            
                             // Verificar compatibilidad
                             int sumaTipos = cell.getCellType() + other.getCellType();
                             if (sumaTipos == 3 || sumaTipos == 4 || sumaTipos == 5) {
@@ -90,7 +99,7 @@ public class App {
                     }
                 }
 
-                System.out.println("\nParejas que cumplen con la compatibilidad: " + parejasCompatibles.size());
+//---------------System.out.println("\nParejas que cumplen con la compatibilidad: " + parejasCompatibles.size());
 
                 // Mapear cada célula a su nodo correspondiente en el grafo
                 Map<Integer, Integer> cellToNodeIn = new HashMap<>();
@@ -150,11 +159,40 @@ public class App {
                                 dinic.addEdge(cell2.getCellId(), calculadoraInNode, capacidadMensajes);
                             }
                         } else if (pareja.type == 2) { // Calculadora - Calculadora
+                            if (cellToNodeOut.get(cell1.getCellId()) == null) {
+                                System.out.println("Error: cellToNodeOut does not contain cell1 ID.");
+                                System.out.println("cell1 ID: " + cell1.getCellId());
+                                //System.out.println("Current contents of cellToNodeOut: " + cellToNodeOut.keySet());
+                                //System.out.println("Full cellToNodeOut map: " + cellToNodeOut);
+                                throw new NullPointerException("cellToNodeOut.get(cell1.getCellId()) is null");
+                            }
                             int calculadora1OutNode = cellToNodeOut.get(cell1.getCellId());
+                            if (cellToNodeIn.get(cell2.getCellId()) == null) {
+                                System.out.println("Error: cellToNodeIn does not contain cell2 ID.");
+                                System.out.println("cell2 ID: " + cell2.getCellId());
+                                System.out.println("Current contents of cellToNodeIn: " + cellToNodeIn.keySet());
+                                System.out.println("Full cellToNodeIn map: " + cellToNodeIn);
+                                throw new NullPointerException("cellToNodeIn.get(cell2.getCellId()) is null");
+                            }
                             int calculadora2InNode = cellToNodeIn.get(cell2.getCellId());
                             dinic.addEdge(calculadora1OutNode, calculadora2InNode, capacidadMensajes);
 
+                            if (cellToNodeOut.get(cell2.getCellId()) == null) {
+                                System.out.println("Error: cellToNodeOut does not contain cell2 ID.");
+                                System.out.println("cell2 ID: " + cell2.getCellId());
+                                System.out.println("Current contents of cellToNodeOut: " + cellToNodeOut.keySet());
+                                System.out.println("Full cellToNodeOut map: " + cellToNodeOut);
+                                throw new NullPointerException("cellToNodeOut.get(cell2.getCellId()) is null");
+                            }
+
                             calculadora1OutNode = cellToNodeOut.get(cell2.getCellId());
+                            if (cellToNodeIn.get(cell1.getCellId()) == null) {
+                                System.out.println("Error: cellToNodeIn does not contain cell1 ID.");
+                                System.out.println("cell1 ID: " + cell1.getCellId());
+                                System.out.println("Current contents of cellToNodeIn: " + cellToNodeIn.keySet());
+                                System.out.println("Full cellToNodeIn map: " + cellToNodeIn);
+                                throw new NullPointerException("cellToNodeIn.get(cell1.getCellId()) is null");
+                            }
                             calculadora2InNode = cellToNodeIn.get(cell1.getCellId());
                             dinic.addEdge(calculadora1OutNode, calculadora2InNode, capacidadMensajes);
                         } else if (pareja.type == 3) { // Calculadora - Ejecutora
@@ -170,11 +208,11 @@ public class App {
                 }
 
                 // Calcular el flujo máximo
-                System.out.println("\nConstruyendo el grafo y calculando el flujo máximo...");
+//--------------System.out.println("\nConstruyendo el grafo y calculando el flujo máximo...");
                 long startTime = System.currentTimeMillis();
                 int flujoMaximo = dinic.maxFlow(0, numCells + 1);
                 long endTime = System.currentTimeMillis();
-                System.out.println("El flujo máximo es: " + flujoMaximo);
+//--------------System.out.println("El flujo máximo es: " + flujoMaximo);
                 System.out.println("Tiempo de cálculo del flujo máximo: " + (endTime - startTime) + " ms");
 
                 // Obtener el flujo que pasó por cada célula calculadora
@@ -203,10 +241,13 @@ public class App {
                     System.out.println("No se encontró ninguna célula calculadora para eliminar.");
                 } else {
                     int flujoTrasEliminacion = flujoMaximo - maxFlowReduction;
-                    System.out.println("El flujo quitando " + idCalculadoraMinFlow + " es " + flujoTrasEliminacion);
+//------------------System.out.println("El flujo quitando " + idCalculadoraMinFlow + " es " + flujoTrasEliminacion);
+                    System.out.println(idCalculadoraMinFlow+" "+flujoMaximo+" "+flujoTrasEliminacion);
                 }
+
             }
         }
+        
     }
 
     private static int calcularPeptidosEnComun(Cell cell1, Cell cell2) {
@@ -216,4 +257,5 @@ public class App {
         return peptidosCell1.size(); //Tamaño de la intersección => Peptidos en común
 
     }
+    
 }
