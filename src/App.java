@@ -134,7 +134,7 @@ public class App {
                     }
                 }
 
-                // Conectar los nodos in y out de las células calculadoras
+                // Conectar los nodos in y out de las células calculadoras(eje entre nodoIn y nodoOut con capacidad infinita)
                 for (Integer cellId : calculadorasSet) {
                     int inNode = cellToNodeIn.get(cellId);
                     int outNode = cellToNodeOut.get(cellId);

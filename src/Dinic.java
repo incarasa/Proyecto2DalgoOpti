@@ -94,7 +94,7 @@ public class Dinic {
                     graph[e.to].get(e.rev).capacity += tr;
 
                     // Aquí asumimos que las células calculadoras están entre 1 y V-2
-                    // Ajusta según tu mapeo de IDs
+                
                     flowThroughCells[u] += tr;
                     return tr;
                 }
