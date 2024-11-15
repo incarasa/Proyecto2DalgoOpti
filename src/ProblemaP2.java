@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,17 +13,15 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class App {
+public class ProblemaP2 {
     // ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     // MAIN
     // -----------------------------------------------------------------------------------------
     public static void main(String[] args) throws Exception {
         try (
-            // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            BufferedReader reader = new BufferedReader(new FileReader(
-                "C:\\Users\\cfvm0\\OneDrive\\Documents\\Proyecto Dalgo 2 OPT\\Proyecto2DalgoOpti\\bin\\P2.in"));
-            FileWriter writer = new FileWriter(
-                "C:\\Users\\cfvm0\\OneDrive\\Documents\\Proyecto Dalgo 2 OPT\\Proyecto2DalgoOpti\\bin\\P2.out")) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))){
+            //BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\cfvm0\\OneDrive\\Documents\\Proyecto2 Dalgo Definitivo\\Proyecto2DalgoOpti\\bin\\P2.in"));
+            //FileWriter writer = new FileWriter("C:\\Users\\cfvm0\\OneDrive\\Documents\\Proyecto2 Dalgo Definitivo\\Proyecto2DalgoOpti\\bin\\P2.out")) {
             String line = reader.readLine(); // Número de casos
             if (line == null) {
                 throw new IOException("El archivo de entrada está vacío.");
@@ -46,7 +45,7 @@ public class App {
 
                 // Estructuras de datos:
                 List<Cell> celulas = new ArrayList<>(numCells); // Lista de células leídas.
-                App.GridPartition grid = new GridPartition(maxDistance); // Tamaño de cuadrícula igual a d
+                ProblemaP2.GridPartition grid = new GridPartition(maxDistance); // Tamaño de cuadrícula igual a d
 
                 // Lista de pares que cumplen con la distancia y compatibilidad
                 List<Tupla> parejasCompatibles = new ArrayList<>();
@@ -204,7 +203,7 @@ public class App {
                             }
                             calculadora2InNode = cellToNodeIn.get(cell1.getCellId());
                             dinic.addEdge(calculadora1OutNode, calculadora2InNode, capacidadMensajes);
-                        } else if (pareja.type == 3) { // Calculadora - Ejecutora
+                        } else if (pareja.type == 3) { // Calculadora - Ejecutora(Out)
                             if (cell1.getCellType() == 2 && cell2.getCellType() == 3) {
                                 int calculadoraOutNode = cellToNodeOut.get(cell1.getCellId());
                                 dinic.addEdge(calculadoraOutNode, cell2.getCellId(), capacidadMensajes);
@@ -217,13 +216,14 @@ public class App {
                 }
 
                 // Calcular el flujo máximo
+
                 // --------------System.out.println("\nConstruyendo el grafo y calculando el
                 // flujo máximo...");
-                long startTime = System.currentTimeMillis();
+                //long startTime = System.currentTimeMillis();
                 int flujoMaximo = dinic.maxFlow(0, numCells + 1);
-                long endTime = System.currentTimeMillis();
+                //long endTime = System.currentTimeMillis();
                 // --------------System.out.println("El flujo máximo es: " + flujoMaximo);
-                System.out.println("Tiempo de cálculo del flujo máximo: " + (endTime - startTime) + " ms");
+                //System.out.println("Tiempo de cálculo del flujo máximo: " + (endTime - startTime) + " ms");
 
                 // Obtener el flujo que pasó por cada célula calculadora
                 Map<Integer, Integer> flujoPorCalculadora = new HashMap<>();
