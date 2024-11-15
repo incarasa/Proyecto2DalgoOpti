@@ -1,8 +1,0 @@
-Caso -> 1
-
-Parejas que cumplen con la compatibilidad: 1511487
-
-Construyendo el grafo y calculando el flujo máximo...
-El flujo máximo es: 0
-Tiempo de cálculo del flujo máximo: 10 ms
-El flujo quitando 99999 es 0
